@@ -5,27 +5,27 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import { errorMiddleware } from "./middlewares/error.js";
 // import connectDB from "./data/database.js";
-import { config } from "dotenv";
+import dotenv from "dotenv";
+
 import postRouter from "./routes/post.js";
+dotenv.config();
 const connectDB = () => {
     mongoose
       .connect(process.env.MONGO_URL)
       .then((c) => console.log(`Database Connected with ${c.connection.host}`))
       .catch((e) => console.log(e));
   };
-config({
-    path: "./data/config.env",
-  });
+
 const app=express();
 app.use(express.json());
 connectDB();
-app.use(
-    cors({
-      origin: [process.env.FRONTEND_URL],
-      methods: ["GET", "POST", "PUT", "DELETE"],
-      credentials: true,
-    })
-  );
+app.use(cors(
+  {
+    origin: [process.env.FRONTEND_URL],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  }
+));
 
 
 app.use(cookieParser());
